@@ -2,7 +2,8 @@ import {connect} from 'react-redux';
 import {toggleTodo, deleteTodo} from '../actions';
 import {VisibilityFilters} from '../actions';
 import React from 'react';
-import {View, Text, TouchableOpacity, AsyncStorage} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
+import SharedPreferences from '../../SharedPreferences';
 
 const getVisibleTodos = (todos, filter) => {
   switch (filter) {
@@ -25,14 +26,14 @@ class VisibleTodos extends React.Component {
     const newtodoList = this.props.allTodos.map(todo =>
       todo.id === id ? {...todo, completed: !todo.completed} : todo,
     ); //store this to async storage
-    AsyncStorage.setItem('todos', JSON.stringify(newtodoList));
+    SharedPreferences.setItem('todos', JSON.stringify(newtodoList));
 
     this.props.toggleTodo(id);
   };
 
   deleteTodo = id => {
     const newtodoList = this.props.allTodos.filter(todo => todo.id !== id); //store this to async storage
-    AsyncStorage.setItem('todos', JSON.stringify(newtodoList));
+    SharedPreferences.setItem('todos', JSON.stringify(newtodoList));
 
     this.props.deleteTodo(id);
   };

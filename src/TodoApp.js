@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  AsyncStorage,
 } from 'react-native';
 import AddTodo from './containers/AddTodo';
 import VisibleTodos from './containers/VisibleTodos';
@@ -14,6 +13,7 @@ import {ScrollView} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {setTodo, setLoadingStatus} from '../src/actions';
 import {connect} from 'react-redux';
+import SharedPreferences from './../SharedPreferences';
 
 class TodoApp extends Component {
   constructor(props) {
@@ -27,11 +27,12 @@ class TodoApp extends Component {
   }
 
   getTodos = async () => {
-    const getTodos = await AsyncStorage.getItem('todos');
-    const parsedTodos = JSON.parse(getTodos);
-    const finalTodos = parsedTodos ? parsedTodos : [];
-    this.props.setTodo(finalTodos);
-    this.props.setLoadingStatus(false);
+    SharedPreferences.getItem('todos', res => {
+      const parsedTodos = JSON.parse(res);
+      const finalTodos = parsedTodos ? parsedTodos : [];
+      this.props.setTodo(finalTodos);
+      this.props.setLoadingStatus(false);
+    });
   };
 
   hideTodo = () => {

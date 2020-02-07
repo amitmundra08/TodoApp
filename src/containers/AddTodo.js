@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  AsyncStorage,
-} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import {addTodo} from '../actions';
+import SharedPreferences from './../../SharedPreferences';
 
 class AddTodo extends Component {
-  state = {
-    text: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: '',
+    };
+  }
+
   addTodo = async () => {
     if (this.state.text.length !== 0) {
       const nextIndex =
@@ -24,7 +23,7 @@ class AddTodo extends Component {
         ...this.props.todos,
         {id: nextIndex, text: this.state.text, completed: false},
       ];
-      AsyncStorage.setItem('todos', JSON.stringify(newTodolist));
+      SharedPreferences.setItem('todos', JSON.stringify(newTodolist));
       this.setState({...this.state, text: ''});
       this.props.hideTodo();
     }
